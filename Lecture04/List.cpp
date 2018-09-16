@@ -53,11 +53,33 @@ public:
     iterator(ListNode *n=NULL) { node = n; }
     Item &getItem() { return node->getItem(); }
     void increment() { node = node->next; }
-    bool end() {  return node==NULL; }
+    bool end() { return node==NULL; }
 
     friend class List;
   };
 
+  class reverse_iterator {
+  friend class List;
+  private:
+    ListNode *node;
+    ListNode *head;
+  public:
+    reverse_iterator(ListNode *n=NULL, ListNode *h = NULL)
+    {
+      node = n;
+      head = h;
+    }
+    void decrement(){
+      ListNode *temp = head;
+      while(temp->getNext() != node){
+        temp = temp->getNext();
+      }
+      node = temp;
+    }
+    Item &getItem(){ return node->getItem(); }
+    bool rend(){ return node == NULL; }
+
+  };
 
 public:
   List();
@@ -65,6 +87,9 @@ public:
   bool remove(Item &a);
   bool empty();
 
+  reverse_iterator rbegin(){
+    return reverse_iterator(tail,head);
+  }
   iterator begin()
   {
     return iterator(head);
@@ -72,6 +97,7 @@ public:
 
   void removeAfter(iterator it); // pseudocode in zyBook 2.4
   void insertAfter(iterator it, Item item);
+
 };
 
 List::List()
@@ -178,6 +204,15 @@ int main()
 
       it.increment();
     }
+  List::reverse_iterator rit = l.rbegin();
+  while(!rit.rend())
+  {
+    Item &item = rit.getItem();
 
+    printf("Last thing in list: %s\n",item.str);
+
+    rit.decrement();
+  }
+printf("done\n");
   return 0;
 }
